@@ -20,7 +20,7 @@ export interface HealthResponse {
 
 app.get('/', (req: Request, res: Response<ApiResponse>) => {
   res.json({
-    message: 'Hello we are learning Docker & CI/CD Pipeline',
+    message: 'Hello we are learning Docker & CI/CD Pipeline V1',
     status: 'running',
     code: 200
   });
