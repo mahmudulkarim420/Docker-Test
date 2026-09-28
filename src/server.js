@@ -4,7 +4,7 @@ const app = express();
 
 app.get("/",(req, res)=>{
     res.json({
-        message : "hello from docker",
+        message : "hello from Docker CI/CD",
         status : "running",
         code : 200
     })
