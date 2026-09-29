@@ -27,9 +27,9 @@ COPY --chown=node:node package*.json ./
 COPY --chown=node:node --from=builder /app/dist ./dist
 
 # Document the default port exposed by the application
-EXPOSE 000
+EXPOSE 3000
 
-# Container health check monitoring (dynamically checks runtime PORT or fallback 4000)
+# Container health check monitoring (dynamically checks runtime PORT or fallback 3000)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/health || exit 1
 
