@@ -64,6 +64,7 @@ jobs:
         run: |
           docker run -d \
             --name docker-demo-ci \
+            -e PORT=3000 \
             -p 3000:3000 \
             docker-demo:ci
 

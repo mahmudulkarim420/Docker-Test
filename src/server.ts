@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { Server } from 'http';
@@ -20,7 +21,7 @@ export interface HealthResponse {
 
 app.get('/', (req: Request, res: Response<ApiResponse>) => {
   res.json({
-    message: 'Hello we are learning Docker & CI/CD Pipeline V1.2',
+    message: 'Hello we are learning Docker & CI/CD Pipeline V2',
     status: 'running',
     code: 200
   });
