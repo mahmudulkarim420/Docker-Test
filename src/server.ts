@@ -4,7 +4,7 @@ import cors from 'cors';
 import { Server } from 'http';
 
 const app = express();
-
+const APP_NAME = process.env.APP_NAME || "Docker Demo";
 app.use(cors());
 app.use(express.json());
 
@@ -16,6 +16,8 @@ export interface ApiResponse {
 
 export interface HealthResponse {
   status: string;
+  app: string;
+  version: string;
   timestamp: string;
 }
 
@@ -30,6 +32,8 @@ app.get('/', (req: Request, res: Response<ApiResponse>) => {
 app.get('/health', (req: Request, res: Response<HealthResponse>) => {
   res.status(200).json({
     status: 'Ok',
+    app: APP_NAME,
+    version: "v2.0.0",
     timestamp: new Date().toISOString()
   });
 });
