@@ -95,6 +95,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Create Environment File
+        run: cp .env.example .env
+
       - name: Start Compose Stack
         run: docker compose up -d --build
 
