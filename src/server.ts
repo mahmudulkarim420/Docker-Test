@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { Server } from 'http';
@@ -33,7 +34,7 @@ app.get('/health', (req: Request, res: Response<HealthResponse>) => {
   });
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 let server: Server | undefined;
 if (process.env.NODE_ENV !== 'test') {
