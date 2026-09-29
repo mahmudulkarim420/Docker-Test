@@ -2,6 +2,9 @@ import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { Server } from 'http';
+import { db } from './lib/db.js';
+import { redis } from './lib/redis.js';
+
 
 const app = express();
 const APP_NAME = process.env.APP_NAME || "Docker Demo";
@@ -41,10 +44,24 @@ app.get('/health', (req: Request, res: Response<HealthResponse>) => {
 const PORT = process.env.PORT || 3000;
 
 let server: Server | undefined;
+
 if (process.env.NODE_ENV !== 'test') {
-  server = app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-  });
+  const startServer = async () => {
+    try {
+      await db.query('SELECT 1');
+
+      await redis.connect();
+
+      server = app.listen(PORT, () => {
+        console.log(`Server started on port ${PORT}`);
+      });
+    } catch (error) {
+      console.error('Failed to start server:', error);
+      process.exit(1);
+    }
+  };
+
+  startServer();
 }
 
 export { app, server };
