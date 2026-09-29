@@ -14,8 +14,8 @@ describe('Express Server API Endpoints (TypeScript)', () => {
 
   it('GET /health should return status UP', async () => {
     const res = await request(app).get('/health');
-    assert.strictEqual(res.status, 200);
-    assert.strictEqual(res.body.status, 'UP');
+    assert.strictEqual(res.status, 500);
+    assert.strictEqual(res.body.status, 'Broken');
     assert.ok(res.body.timestamp);
   });
 

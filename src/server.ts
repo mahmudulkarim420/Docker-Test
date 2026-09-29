@@ -28,8 +28,8 @@ app.get('/', (req: Request, res: Response<ApiResponse>) => {
 });
 
 app.get('/health', (req: Request, res: Response<HealthResponse>) => {
-  res.status(200).json({
-    status: 'UP',
+  res.status(500).json({
+    status: 'Broken',
     timestamp: new Date().toISOString()
   });
 });
