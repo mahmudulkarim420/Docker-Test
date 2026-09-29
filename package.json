@@ -15,13 +15,16 @@
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^18.0.4",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.23.0",
+    "redis": "^6.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.9",
+    "@types/pg": "^8.23.1",
     "@types/supertest": "^6.0.3",
     "eslint": "^10.11.0",
     "globals": "^17.12.0",
