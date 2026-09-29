@@ -41,6 +41,28 @@ app.get('/health', (req: Request, res: Response<HealthResponse>) => {
   });
 });
 
+app.get('/health/dependencies', async (_req, res) => {
+  try {
+    await db.query('SELECT 1');
+
+    const redisPing = await redis.ping();
+
+    res.status(200).json({
+      status: 'ok',
+      database: 'connected',
+      redis: redisPing === 'PONG' ? 'connected' : 'unknown'
+    });
+  } catch (error) {
+    console.error('Dependency health check failed:', error);
+
+    res.status(503).json({
+      status: 'error',
+      database: 'unknown',
+      redis: 'unknown'
+    });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 
 let server: Server | undefined;
