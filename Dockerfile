@@ -13,7 +13,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 
 # Stage 3: Production runtime image
-FROM node:22-alpine AS runner
+FROM node:99-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -27,7 +27,7 @@ COPY --chown=node:node package*.json ./
 COPY --chown=node:node --from=builder /app/dist ./dist
 
 # Document the default port exposed by the application
-EXPOSE 3000
+EXPOSE 000
 
 # Container health check monitoring (dynamically checks runtime PORT or fallback 4000)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
