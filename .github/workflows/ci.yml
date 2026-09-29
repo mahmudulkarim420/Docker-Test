@@ -78,6 +78,9 @@ jobs:
       - name: Verify Health Endpoint
         run: curl -f http://localhost:3000/health
 
+      - name: Verify Database & Redis Dependencies
+        run: curl -f http://localhost:3000/health/dependencies
+
       - name: Show Container Logs
         if: always()
         run: docker compose logs
@@ -122,6 +125,9 @@ jobs:
 
       - name: Verify Health Endpoint
         run: curl -f http://localhost:3000/health
+
+      - name: Verify Database & Redis Dependencies
+        run: curl -f http://localhost:3000/health/dependencies
 
       - name: Show Compose Logs
         if: always()
