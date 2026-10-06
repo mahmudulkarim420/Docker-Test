@@ -41,26 +41,35 @@ app.get('/health', (req: Request, res: Response<HealthResponse>) => {
   });
 });
 
-app.get('/health/dependencies', async (_req, res) => {
+app.get('/ready', async (_req, res) => {
+  let database = 'connected';
+  let redisStatus = 'connected';
+
   try {
     await db.query('SELECT 1');
+  } catch (error) {
+    console.error('Database readiness check failed:', error);
+    database = 'disconnected';
+  }
 
+  try {
     const redisPing = await redis.ping();
 
-    res.status(200).json({
-      status: 'ok',
-      database: 'connected',
-      redis: redisPing === 'PONG' ? 'connected' : 'unknown'
-    });
+    if (redisPing !== 'PONG') {
+      redisStatus = 'disconnected';
+    }
   } catch (error) {
-    console.error('Dependency health check failed:', error);
-
-    res.status(503).json({
-      status: 'error',
-      database: 'unknown',
-      redis: 'unknown'
-    });
+    console.error('Redis readiness check failed:', error);
+    redisStatus = 'disconnected';
   }
+
+  const ready = database === 'connected' && redisStatus === 'connected';
+
+  res.status(ready ? 200 : 503).json({
+    status: ready ? 'ready' : 'not_ready',
+    database,
+    redis: redisStatus
+  });
 });
 
 const PORT = process.env.PORT || 3000;
@@ -84,6 +93,48 @@ if (process.env.NODE_ENV !== 'test') {
   };
 
   startServer();
+
+  const shutdown = async (signal: string) => {
+  console.log(`${signal} received. Starting graceful shutdown...`);
+
+  try {
+    if (server) {
+      await new Promise<void>((resolve, reject) => {
+        server?.close((error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      console.log('HTTP server closed.');
+    }
+
+    await db.end();
+    console.log('Database connection pool closed.');
+
+    if (redis.isOpen) {
+      await redis.quit();
+      console.log('Redis connection closed.');
+    }
+
+    console.log('Graceful shutdown completed.');
+    process.exit(0);
+  } catch (error) {
+    console.error('Graceful shutdown failed:', error);
+    process.exit(1);
+  }
+};
+
+process.on('SIGTERM', () => {
+  void shutdown('SIGTERM');
+});
+
+process.on('SIGINT', () => {
+  void shutdown('SIGINT');
+});
 }
 
 export { app, server };
