@@ -23,7 +23,7 @@ USER node
 
 # Copy built application and production node_modules with correct permissions
 COPY --chown=node:node --from=dependencies /app/node_modules ./node_modules
-COPY --chown=node:node package*.json ./
+COPY --chown=node:node package.json ./
 COPY --chown=node:node --from=builder /app/dist ./dist
 
 # Document the default port exposed by the application
