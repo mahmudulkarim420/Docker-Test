@@ -100,7 +100,7 @@ jobs:
         run: curl -f http://localhost:3000/health
 
       - name: Verify Database & Redis Dependencies
-        run: curl -f http://localhost:3000/health/dependencies
+        run: curl -f http://localhost:3000/ready
 
       - name: Show Container Logs
         if: always()
@@ -148,7 +148,7 @@ jobs:
         run: curl -f http://localhost:3000/health
 
       - name: Verify Database & Redis Dependencies
-        run: curl -f http://localhost:3000/health/dependencies
+        run: curl -f http://localhost:3000/ready
 
       - name: Show Compose Logs
         if: always()
