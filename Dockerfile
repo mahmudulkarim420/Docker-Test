@@ -18,6 +18,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Remove npm to reduce image size and fix false-positive vulnerabilities
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm
+
 # Security: Run application as non-root user
 USER node
 
