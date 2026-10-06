@@ -18,12 +18,15 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Remove npm to reduce image size and fix false-positive vulnerabilities
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm
+
 # Security: Run application as non-root user
 USER node
 
 # Copy built application and production node_modules with correct permissions
 COPY --chown=node:node --from=dependencies /app/node_modules ./node_modules
-COPY --chown=node:node package*.json ./
+COPY --chown=node:node package.json ./
 COPY --chown=node:node --from=builder /app/dist ./dist
 
 # Document the default port exposed by the application
