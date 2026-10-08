@@ -41,6 +41,9 @@ services:
       - /tmp
     mem_limit: 256m
     cpus: 0.5
+    pids_limit: 100
+    cap_drop:
+      - ALL
     environment:
       NODE_ENV: production
       PORT: ${PORT:-3000}
