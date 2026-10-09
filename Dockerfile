@@ -18,6 +18,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+ARG COMMIT_SHA=unknown
+ENV COMMIT_SHA=${COMMIT_SHA}
+
 # Remove npm to reduce image size and fix false-positive vulnerabilities
 RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm
 

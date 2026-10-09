@@ -21,6 +21,7 @@ export interface HealthResponse {
   status: string;
   app: string;
   version: string;
+  commit: string;
   timestamp: string;
 }
 
@@ -37,6 +38,7 @@ app.get('/health', (req: Request, res: Response<HealthResponse>) => {
     status: 'Ok',
     app: APP_NAME,
     version: "v2.0.0",
+    commit: process.env.COMMIT_SHA || 'unknown',
     timestamp: new Date().toISOString()
   });
 });
