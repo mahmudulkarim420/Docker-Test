@@ -67,6 +67,8 @@ jobs:
           push: false
           load: true
           tags: docker-demo:test
+          build-args: |
+            COMMIT_SHA=${{ github.sha }}
 
       - name: Scan Docker Image for Vulnerabilities
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
@@ -78,7 +80,7 @@ jobs:
           severity: CRITICAL,HIGH
 
       - name: Start Docker Compose Services
-        run: docker compose up -d --build
+        run: BACKEND_IMAGE=docker-demo:test docker compose up -d --no-build
 
       - name: Wait for Application
         run: |
@@ -100,60 +102,12 @@ jobs:
         run: curl -f http://localhost:3000/health
 
       - name: Verify Database & Redis Dependencies
-        run: curl -f http://localhost:3000/health/dependencies
+        run: curl -f http://localhost:3000/ready
 
       - name: Show Container Logs
         if: always()
         run: docker compose logs
 
       - name: Stop Docker Services
-        if: always()
-        run: docker compose down -v
-
-  compose-integration:
-    name: Docker Compose Integration Test
-    needs: docker-check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Create Environment File
-        run: cp .env.example .env
-
-      - name: Start Compose Stack
-        run: docker compose up -d --build
-
-      - name: Show Compose Status
-        run: docker compose ps
-
-      - name: Wait for Backend
-        run: |
-          for i in {1..20}; do
-            if curl -fsS http://localhost:3000/health; then
-              echo "Backend is healthy."
-              exit 0
-            fi
-
-            echo "Waiting for backend..."
-            sleep 2
-          done
-
-          echo "Backend failed to become healthy."
-          docker compose logs
-          exit 1
-
-      - name: Verify Health Endpoint
-        run: curl -f http://localhost:3000/health
-
-      - name: Verify Database & Redis Dependencies
-        run: curl -f http://localhost:3000/health/dependencies
-
-      - name: Show Compose Logs
-        if: always()
-        run: docker compose logs
-
-      - name: Stop Compose Stack
         if: always()
         run: docker compose down -v
